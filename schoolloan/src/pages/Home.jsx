@@ -1,0 +1,27 @@
+import { useState } from 'react'
+import './Home.css'
+import logo from '../assets/logo.png';
+
+function Home() {
+  return (
+    <>
+       <div className="container">
+      <div className="login-box">
+        <img src={logo} alt="Logo SchoolLoan" className="logo" />
+        <h2>Bem-vindo(a)</h2>
+        <form>
+          <label>Usuário:</label>
+          <input type="text" />
+          <label>Senha:</label>
+          <input type="password" />
+          <div className="forgot">Esqueceu sua senha?</div>
+          <button type="submit">Logar</button>
+        </form>
+        <div className="create-account">Criar conta</div>
+      </div>
+    </div>
+    </>
+  )
+}
+
+export default Home;
