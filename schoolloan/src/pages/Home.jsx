@@ -1,27 +1,25 @@
 import { useState } from 'react'
 import './Home.css'
-import logo from '../assets/logo.png';
+import Header from '../components/Header'
+import Sidebar from '../components/Sidebar'
 
 function Home() {
-  return (
-    <>
-       <div className="container">
-      <div className="login-box">
-        <img src={logo} alt="Logo SchoolLoan" className="logo" />
-        <h2>Bem-vindo(a)</h2>
-        <form>
-          <label>Usuário:</label>
-          <input type="text" />
-          <label>Senha:</label>
-          <input type="password" />
-          <div className="forgot">Esqueceu sua senha?</div>
-          <button type="submit">Logar</button>
-        </form>
-        <div className="create-account">Criar conta</div>
-      </div>
-    </div>
-    </>
-  )
+    const [sidebarOpen, setSidebarOpen] = useState(true)
+    return (
+        <div className="app">
+            <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+            <div className="main">
+                <Sidebar isOpen={sidebarOpen} />
+                 <div className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+                    <button className="main-button">Emprestar Equipamento</button>
+                    <button className="main-button">Recolher Equipamento</button>
+                </div>
+            </div>
+        </div>  
+    )
 }
 
 export default Home;
+
+
+

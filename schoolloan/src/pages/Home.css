@@ -1,75 +1,71 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background-color: #e5e5e5;
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
 }
 
-.container {
-  height: 100vh;
+.logo {
+  font-size: 1.8rem;
+  color: #c2f0c2;
+}
+
+.user-info {
   display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section ul {
+  list-style: none;
+  padding-left: 10px;
+}
+
+.section li {
+  margin-top: 8px;
+  color: #555;
+}
+
+.section li.disabled {
+  color: #888;
+  cursor: not-allowed;
+}
+
+.content {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   justify-content: center;
   align-items: center;
 }
 
-.login-box {
-  background-color: #d1d1d1;
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid #2d422e;
-  width: 350px;
-  text-align: center;
-}
-
-.logo {
-  width: 60px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  margin-bottom: 20px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-label {
-  text-align: left;
-  margin-bottom: 4px;
-  font-size: 14px;
-}
-
-input {
-  padding: 8px;
-  border: 1px solid #000;
-  border-radius: 15px;
-  margin-bottom: 12px;
-}
-
-.forgot {
-  font-size: 11px;
-  margin-bottom: 12px;
-}
-
-button {
-  background-color: #000;
-  color: white;
-  padding: 8px;
+.main-button {
+  padding: 12px 24px;
   border: none;
-  border-radius: 15px;
+  background-color: #444;
+  color: white;
+  border-radius: 20px;
+  font-size: 1rem;
   cursor: pointer;
 }
 
-button:hover {
+.main-button:hover {
   background-color: #333;
-}
-
-.create-account {
-  margin-top: 15px;
-  font-size: 14px;
-  cursor: pointer;
-  text-decoration: underline;
 }
