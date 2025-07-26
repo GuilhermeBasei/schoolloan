@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './Login.css'
 import logo from '../assets/logo.png';
+import { Link } from 'react-router-dom'
 
 function Login() {
   return (
@@ -17,7 +18,7 @@ function Login() {
           <div className="forgot">Esqueceu sua senha?</div>
           <button type="submit">Logar</button>
         </form>
-        <div className="create-account">Criar conta</div>
+        <div className="create-account" ><Link to="/">LOGIN DIRETO</Link></div>
       </div>
     </div>
     </>

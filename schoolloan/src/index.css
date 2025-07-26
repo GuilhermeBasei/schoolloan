@@ -15,18 +15,21 @@ body {
 .sidebar {
   width: 220px;
   background-color: #ccc;
+  color: black;
   padding: 20px;
   box-sizing: border-box;
+  transition: width 0.3s ease, opacity 0.3s ease;
 }
 
 .sidebar.open {
-  width: 220px;
+  width: 240px;
 }
 
 .sidebar.closed {
   width: 0;
   padding: 0;
 }
+
 .header {
   width: 100vw;
   background-color: #333;
@@ -35,4 +38,38 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+button {
+  background-color: #000;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+button:hover {
+  background-color: #333;
+}
+
+.sidebar.closed {
+  width: 0;
+  padding: 0;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.logoemp {
+  width: 120px;
+  margin-bottom: 2px;
+  display: block;
+  margin-right: auto;
+}
+
+.logo {
+  width: 120px;
+  margin-bottom: 2px;
+
 }

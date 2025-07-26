@@ -22,10 +22,7 @@ body {
   text-align: center;
 }
 
-.logo {
-  width: 120px;
-  margin-bottom: 2px;
-}
+
 
 h2 {
   margin-bottom: 20px;
@@ -55,18 +52,6 @@ input {
   margin-bottom: 12px;
 }
 
-button {
-  background-color: #000;
-  color: white;
-  padding: 8px;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #333;
-}
 
 .create-account {
   margin-top: 15px;
