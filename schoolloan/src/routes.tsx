@@ -6,7 +6,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import Emprestar from './pages/Emprestar';
 import Recolher from './pages/Recolher';
-import Relatórios from './pages/Relatórios';
+import Relatorios from './pages/Relatorios';
 
 function MainRoutes() {
 
@@ -19,7 +19,7 @@ function MainRoutes() {
             <Route path="/Login" element={<Login />} />
             <Route path="/Emprestar" element={<Emprestar />} />
             <Route path="/Recolher" element={<Recolher />} />
-            <Route path="/Relatorios" element={<Relatórios />} />
+            <Route path="/Relatorios" element={<Relatorios />} />
         </Routes>
     );
 

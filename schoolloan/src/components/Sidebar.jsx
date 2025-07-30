@@ -10,7 +10,7 @@ function Sidebar({ isOpen }) {
             <strong>Empréstimos</strong>
             <ul>
               <li><Link to="/Emprestar">Emprestar</Link></li>
-              <li><Link to="/Recolher">Recolher equipamento</Link></li>
+              <li><Link to="/Recolher">Recolher</Link></li>
             </ul>
           </div>
           <div className="section">

@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import './Home.css'
+import './Relatorios.css'
 import logo from '../assets/logo.png';
 import Header from '../components/Header'
 import Sidebar from '../components/Sidebar'
-import { Link } from 'react-router-dom'
 
-function Home() {
+function Relatorios() {
     const [sidebarOpen, setSidebarOpen] = useState(true)
     return (
         <>
@@ -17,11 +16,10 @@ function Home() {
                         <div className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
                             <div className="login-boxfundo">
                                 <img src={logo} alt="Logo SchoolLoan" className="logo" />
-                                <h2>Empréstimo de Equipamentos</h2>
-                                <div className='login-boxa'>
-                                    <button type="button" className="btn-relatorio"><Link to="/emprestar">Registrar Empréstimo</Link></button>
-                                    <button type="button" className="btn-relatorio"><Link to="/recolher">Registrar Devolução</Link></button>
-                                </div>
+                                <h2>Equipamentos Faltando</h2>
+                                <form>
+                              
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -31,4 +29,4 @@ function Home() {
     )
 }
 
-export default Home;
+export default Relatorios;
