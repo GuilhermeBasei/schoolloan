@@ -4,13 +4,20 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup-db": "npx prisma migrate deploy",
+    "start": "node server.js",
+    "postinstall": "prisma generate",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^5.1.0"
+    "@prisma/client": "^6.17.1",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "prisma": "^6.17.1"
   }
 }

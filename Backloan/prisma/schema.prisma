@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id                 Int       @id @default(autoincrement())
+  nome               String
+  codigo             String    @unique
+  dataUltimoEmprestimo DateTime?
+  devolucaoPendente  Boolean   @default(false)
+  emprestimos        Emprestimo[]
+
+  @@map("usuarios") // renomeia tabela no banco
+}
+
+model Equipamento {
+  id                  Int       @id @default(autoincrement())
+  patrimonio          String    @unique
+  descricao           String
+  dataUltimoEmprestimo DateTime?
+  disponivel          Boolean   @default(true)
+  emprestimos         Emprestimo[]
+
+  @@map("equipamentos")
+}
+
+model Operador {
+  id       Int    @id @default(autoincrement())
+  nome     String
+  senha    String
+  isAdmin  Boolean @default(false)
+
+  @@map("operadores")
+}
+
+model Emprestimo {
+  id            Int       @id @default(autoincrement())
+  usuarioId     Int
+  equipamentoId Int
+  ativo         Boolean   @default(true)
+  dataEmprestimo DateTime @default(now())
+  dataDevolucao DateTime?
+
+  usuario      Usuario     @relation(fields: [usuarioId], references: [id])
+  equipamento  Equipamento @relation(fields: [equipamentoId], references: [id])
+
+  @@map("emprestimos")
+}
