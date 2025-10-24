@@ -1,13 +1,9 @@
- a{
-    
-    text-decoration: none;
-    color: White;
-
+a {
+  text-decoration: none;
+  color: var(--link-color, #e5e5e5);
+  transition: color 0.3s ease;
 }
 
- a:hover{
-    
-    text-decoration: none;
-    color: lightgrey;
-
+a:hover {
+  color: var(--link-hover, #9ca3af);
 }

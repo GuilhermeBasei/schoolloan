@@ -15,10 +15,10 @@ function Login() {
           <input type="text" />
           <label>Senha:</label>
           <input type="password" />
-          <div className="forgot">Esqueceu sua senha?</div>
+          <div > <Link to="/" className="forgot">Esqueceu sua senha?</Link></div>
           <button type="submit">Logar</button>
         </form>
-        <div className="create-account" ><Link to="/">LOGIN DIRETO</Link></div>
+        <div > <Link to="/" className="createAccount">Criar conta</Link></div>
       </div>
     </div>
     </>

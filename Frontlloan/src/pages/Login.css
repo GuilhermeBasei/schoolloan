@@ -1,61 +1,133 @@
-body {
+/* RESET */
+* {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
-  background: linear-gradient(to right, #919ecc, #9cc1ca);
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", sans-serif;
 }
 
-.container {
+/* BODY */
+body {
   height: 100vh;
   width: 100vw;
+ 
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #1e293b;
 }
 
+/* CONTAINER */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* LOGIN BOX */
 .login-box {
-  background: linear-gradient(to right, #e2dbdb, #dadbe0);
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid #3f3939;
-  width: 350px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 40px 50px;
+  border-radius: 16px;
+  width: 360px;
   text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
+.login-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
 
-
+/* TÍTULO */
 h2 {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  color: #1f2937;
+  font-weight: 700;
 }
 
+/* FORMULÁRIO */
 form {
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
 
+/* LABEL */
 label {
   text-align: left;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   font-size: 14px;
+  font-weight: 500;
+  color: #374151;
 }
 
+/* INPUTS */
 input {
-  padding: 8px;
-  border: 1px solid #000;
-  border-radius: 15px;
-  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.forgot {
-  font-size: 11px;
-  margin-bottom: 12px;
+input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
 }
 
-
-.create-account {
-  margin-top: 15px;
-  font-size: 14px;
+/* BOTÃO */
+button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+/* LINKS */
+.forgot {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #475569;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+.forgot:hover {
+  color: #2563eb;
+}
+
+.createAccount {
+  font-size: 14px;
+  margin-top: 28px;
+  color: #174def;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.createAccount:hover {
+  color: #1e4292;
   text-decoration: underline;
 }
