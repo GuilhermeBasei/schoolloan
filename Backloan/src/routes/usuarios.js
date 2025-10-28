@@ -1,12 +1,20 @@
 import express from 'express';
 import prisma from '../config/prisma.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 
+// Todas as rotas abaixo exigem token válido
+router.use(authMiddleware);
+
 // Listar todos os usuários
 router.get('/', async (req, res) => {
-  const usuarios = await prisma.usuario.findMany();
-  res.json(usuarios);
+  try {
+    const usuarios = await prisma.usuario.findMany();
+    res.json(usuarios);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao listar usuários' });
+  }
 });
 
 // Criar usuário

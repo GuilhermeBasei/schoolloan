@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
+import { AuthContext } from '../context/AuthContext'; // ✅ Importa contexto
 
 function Header({ toggleSidebar }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-
-  // Pega o usuário do localStorage
-  const usuario = JSON.parse(localStorage.getItem('usuario'));
+  const { user, logout } = useContext(AuthContext); // ✅ pega usuário do contexto
 
   const handleLogout = () => {
-    localStorage.removeItem('usuario'); // limpa login
-    navigate('/login'); // redireciona para login
+    logout(); // ✅ limpa token e usuário do contexto e localStorage
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -19,14 +18,14 @@ function Header({ toggleSidebar }) {
       <button className="menu-btn" onClick={toggleSidebar}>☰</button>
       <h1 className="logoemp"><Link to="/">SchoolLoan</Link></h1>
 
-      {usuario && (
+      {user && (
         <div className="user-info">
-          <span 
-            className="user-name" 
+          <span
+            className="user-name"
             onClick={() => setMenuOpen(!menuOpen)}
             style={{ cursor: 'pointer' }}
           >
-            {usuario.operador.nome}
+            {user.nome} {/* ✅ mostra o nome do usuário do contexto */}
           </span>
           <img src="https://i.pravatar.cc/30" alt="user" className="user-avatar" />
 

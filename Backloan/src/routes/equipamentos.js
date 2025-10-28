@@ -1,12 +1,20 @@
 import express from 'express';
 import prisma from '../config/prisma.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 
+// Todas as rotas abaixo exigem token válido
+router.use(authMiddleware);
+
 // Listar equipamentos
 router.get('/', async (req, res) => {
-  const equipamentos = await prisma.equipamento.findMany();
-  res.json(equipamentos);
+  try {
+    const equipamentos = await prisma.equipamento.findMany();
+    res.json(equipamentos);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao listar equipamentos' });
+  }
 });
 
 // Criar equipamento

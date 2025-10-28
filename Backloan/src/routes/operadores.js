@@ -1,11 +1,12 @@
 import express from 'express';
 import prisma from '../config/prisma.js';
 import bcrypt from 'bcrypt';
+import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// Listar operadores
-router.get('/', async (req, res) => {
+// Listar operadores (protegido)
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const operadores = await prisma.operador.findMany();
     res.json(operadores);
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Criar operador
+// Criar operador (não precisa de login)
 router.post('/', async (req, res) => {
   const { nome, senha, isAdmin } = req.body;
 
@@ -23,7 +24,6 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // Criptografa a senha
     const hashed = await bcrypt.hash(senha, 10);
 
     const operador = await prisma.operador.create({

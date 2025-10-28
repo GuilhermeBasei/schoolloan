@@ -1,33 +1,46 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true); // ✅ novo estado de carregamento
 
-  // Quando o app carrega, tenta pegar o usuário salvo no localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const savedToken = localStorage.getItem("token");
+    const savedUser = localStorage.getItem("user");
+
+    if (savedToken && savedUser) {
+      setToken(savedToken);
+      setUser(JSON.parse(savedUser));
     }
+
+    setLoading(false); // ✅ só termina quando já verificou o localStorage
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+  const login = (jwtToken, operador) => {
+    localStorage.setItem("token", jwtToken);
+    localStorage.setItem("user", JSON.stringify(operador));
+    setToken(jwtToken);
+    setUser(operador);
   };
 
   const logout = () => {
-    setUser(null);
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
+    setToken(null);
+    setUser(null);
   };
 
+  // ✅ mostra uma tela de "carregando" enquanto verifica login
+  if (loading) {
+    return <div style={{ color: "white", textAlign: "center", marginTop: "20%" }}>Carregando...</div>;
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => useContext(AuthContext);
+}

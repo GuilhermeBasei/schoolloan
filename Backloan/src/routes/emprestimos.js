@@ -1,14 +1,22 @@
 import express from 'express';
 import prisma from '../config/prisma.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 
+// Todas as rotas abaixo exigem token válido
+router.use(authMiddleware);
+
 // Listar todos os empréstimos
 router.get('/', async (req, res) => {
-  const emprestimos = await prisma.emprestimo.findMany({
-    include: { usuario: true, equipamento: true }
-  });
-  res.json(emprestimos);
+  try {
+    const emprestimos = await prisma.emprestimo.findMany({
+      include: { usuario: true, equipamento: true }
+    });
+    res.json(emprestimos);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao listar empréstimos' });
+  }
 });
 
 // Criar empréstimo

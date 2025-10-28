@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import './Login.css';
 import logo from '../assets/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext'; // ✅ Importa o contexto
 
 function Login() {
   const [nome, setNome] = useState('');
   const [senha, setSenha] = useState('');
   const [mensagem, setMensagem] = useState('');
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // ✅ Função de login do contexto
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,13 +24,13 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
+        // ✅ Salva o token e o usuário no contexto e localStorage
+        login(data.token, data.operador);
+
         setMensagem('Login realizado com sucesso!');
-        // Você pode armazenar as informações do usuário no localStorage
-        localStorage.setItem('usuario', JSON.stringify(data));
-        // Redirecionar para o painel principal
-        navigate('/');
+        navigate('/'); // ✅ Redireciona para a home protegida
       } else {
-        setMensagem(data.error || 'Erro ao fazer login.');
+        setMensagem(data.error || 'Usuário ou senha incorretos.');
       }
     } catch (error) {
       console.error(error);
@@ -71,4 +73,3 @@ function Login() {
 }
 
 export default Login;
-
