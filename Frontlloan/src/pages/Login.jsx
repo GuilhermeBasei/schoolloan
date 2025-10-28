@@ -1,28 +1,74 @@
-
-import './Login.css'
+import { useState } from 'react';
+import './Login.css';
 import logo from '../assets/logo.png';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
+  const [nome, setNome] = useState('');
+  const [senha, setSenha] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, senha }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMensagem('Login realizado com sucesso!');
+        // Você pode armazenar as informações do usuário no localStorage
+        localStorage.setItem('usuario', JSON.stringify(data));
+        // Redirecionar para o painel principal
+        navigate('/');
+      } else {
+        setMensagem(data.error || 'Erro ao fazer login.');
+      }
+    } catch (error) {
+      console.error(error);
+      setMensagem('Erro na conexão com o servidor.');
+    }
+  };
+
   return (
-    <>
-       <div className="container">
+    <div className="container">
       <div className="login-box">
         <img src={logo} alt="Logo SchoolLoan" className="logo" />
         <h2>Bem-vindo(a)</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>Usuário:</label>
-          <input type="text" />
+          <input
+            type="text"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            required
+          />
           <label>Senha:</label>
-          <input type="password" />
-          <div > <Link to="/" className="forgot">Esqueceu sua senha?</Link></div>
+          <input
+            type="password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
+          <div>
+            <Link to="/" className="forgot">Esqueceu sua senha?</Link>
+          </div>
           <button type="submit">Logar</button>
         </form>
-        <div > <Link to="/" className="createAccount">Criar conta</Link></div>
+        {mensagem && <p style={{ marginTop: '10px', color: 'white' }}>{mensagem}</p>}
+        <div>
+          <Link to="/" className="createAccount">Criar conta</Link>
+        </div>
       </div>
     </div>
-    </>
-  )
+  );
 }
 
 export default Login;
+

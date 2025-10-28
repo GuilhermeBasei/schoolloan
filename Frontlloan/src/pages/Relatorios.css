@@ -5,55 +5,82 @@ body {
   background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
 }
 
+/* Container principal */
 .container {
-  height: 100vh;
-  width: 100vw;
+  width: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding: 20px 0;
 }
 
+/* Box principal */
 .login-boxfundo {
   background: linear-gradient(to right, #e2dbdb, #dadbe0);
-  padding: 100px;
+  padding: 40px;
   border-radius: 20px;
   border: 1px solid #3f3939;
   width: 1000px;
   text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
+/* Cabeçalho */
 h2 {
   margin-bottom: 20px;
+  color: #1e1e1e;
 }
 
-form {
+/* Tabela estilo planilha */
+.tabela {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-}
-
-label {
-  text-align: left;
-  margin-bottom: 4px;
-  font-size: 14px;
-}
-
-input {
-  padding: 8px;
-  border: 1px solid #000;
+  margin-top: 20px;
+  border: 1px solid #3f3939;
   border-radius: 15px;
-  margin-bottom: 12px;
+  overflow: hidden;
 }
 
-.forgot {
-  font-size: 11px;
-  margin-bottom: 12px;
+.tabela-header, .tabela-linha {
+  display: grid;
+  grid-template-columns: 50px 150px 1fr 100px 100px; /* ID | Patrimônio | Descrição | Disponível | Ações */
+  padding: 10px;
+  align-items: center;
 }
 
+.tabela-header {
+  background-color: #3f3939;
+  color: #fff;
+  font-weight: bold;
+}
 
-.create-account {
-  margin-top: 15px;
-  font-size: 14px;
+.tabela-linha {
+  background-color: #f5f5f5;
+  color: #1e1e1e;
+  border-top: 1px solid #ccc;
+}
+
+.tabela-linha:nth-child(even) {
+  background-color: #e0e0e0;
+}
+
+.tabela-linha span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tabela-linha button {
+  background-color: #ff4d4d;
+  border: none;
+  padding: 5px 10px;
+  color: #fff;
   cursor: pointer;
-  text-decoration: underline;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.tabela-linha button:hover {
+  background-color: #e60000;
 }
