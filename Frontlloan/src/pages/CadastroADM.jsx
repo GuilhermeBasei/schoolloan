@@ -7,7 +7,7 @@ import Sidebar from '../components/Sidebar'
 function CadastroADM() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [nome, setNome] = useState('')
-  const [email, setEmail] = useState('')
+
   const [senha, setSenha] = useState('')
   const [confirmarSenha, setConfirmarSenha] = useState('')
   const [isAdmin, setIsAdmin] = useState(true)
@@ -32,7 +32,6 @@ function CadastroADM() {
       if (response.ok) {
         setMensagem('Operador cadastrado com sucesso!')
         setNome('')
-        setEmail('')
         setSenha('')
         setConfirmarSenha('')
       } else {
@@ -64,12 +63,7 @@ function CadastroADM() {
                   required
                 />
 
-                <label>E-mail:</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                
 
                 <label>Senha:</label>
                 <input

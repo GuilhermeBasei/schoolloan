@@ -43,6 +43,8 @@ router.patch('/:id/disponivel', async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: 'Erro ao atualizar disponibilidade' });
   }
+
+  
 });
 
 export default router;

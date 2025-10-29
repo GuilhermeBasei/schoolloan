@@ -44,31 +44,62 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Devolver equipamento
-router.patch('/:id/devolver', async (req, res) => {
-  const { id } = req.params;
+
+  // Devolver por patrimônio do equipamento
+router.patch('/devolver', async (req, res) => {
+  const { patrimonio } = req.body;
+
   try {
-    const emprestimo = await prisma.emprestimo.update({
-      where: { id: Number(id) },
-      data: { ativo: false, dataDevolucao: new Date() },
-      include: { usuario: true, equipamento: true }
+    const equipamento = await prisma.equipamento.findUnique({
+      where: { patrimonio },
     });
 
-    // Atualiza status do equipamento e usuário
+    if (!equipamento) {
+      return res.status(404).json({ error: 'Equipamento não encontrado.' });
+    }
+
+    // Busca o empréstimo ativo
+    const emprestimoAtivo = await prisma.emprestimo.findFirst({
+      where: {
+        equipamentoId: equipamento.id,
+        ativo: true,
+      },
+    });
+
+    if (!emprestimoAtivo) {
+      return res.status(400).json({ error: 'Nenhum empréstimo ativo encontrado para este equipamento.' });
+    }
+
+    // Atualiza o empréstimo
+    const emprestimoAtualizado = await prisma.emprestimo.update({
+      where: { id: emprestimoAtivo.id },
+      data: {
+        ativo: false,
+        dataDevolucao: new Date(),
+      },
+      include: { usuario: true, equipamento: true },
+    });
+
+    // Atualiza o equipamento e o usuário
     await prisma.equipamento.update({
-      where: { id: emprestimo.equipamentoId },
-      data: { disponivel: true }
+      where: { id: equipamento.id },
+      data: { disponivel: true },
     });
 
     await prisma.usuario.update({
-      where: { id: emprestimo.usuarioId },
-      data: { devolucaoPendente: false }
+      where: { id: emprestimoAtualizado.usuarioId },
+      data: { devolucaoPendente: false },
     });
 
-    res.json(emprestimo);
+    res.json({
+      message: 'Devolução registrada com sucesso!',
+      emprestimo: emprestimoAtualizado,
+    });
   } catch (error) {
-    res.status(400).json({ error: 'Erro ao devolver equipamento' });
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao processar devolução.' });
   }
 });
+
 
 export default router;
