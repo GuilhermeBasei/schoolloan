@@ -16,8 +16,8 @@ function Sidebar({ isOpen }) {
           <div className="section">
             <strong>Relatórios</strong>
             <ul>
-              <li><Link to="/Relatorios">Diario</Link></li>
-              <li><Link to="/Relatorios">Mensal</Link></li>
+              <li><Link to="/Relatorios/Diario">Diario</Link></li>
+              <li><Link to="/Relatorios/Mensal">Mensal</Link></li>
             </ul>
           </div>
           <div className="section">

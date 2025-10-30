@@ -10,6 +10,8 @@ import Home from "./pages/Home";
 import Emprestar from "./pages/Emprestar";
 import Recolher from "./pages/Recolher";
 import Relatorios from "./pages/Relatorios";
+import RelatorioDiario from './pages/RelatorioDiario';
+import RelatorioMensal from './pages/RelatorioMensal';
 
 function MainRoutes() {
   return (
@@ -72,6 +74,22 @@ function MainRoutes() {
           element={
             <ProtectedRoute>
               <Relatorios />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/Relatorios/Diario"
+          element={
+            <ProtectedRoute>
+              <RelatorioDiario />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/Relatorios/Mensal"
+          element={
+            <ProtectedRoute>
+              <RelatorioMensal />
             </ProtectedRoute>
           }
         />
