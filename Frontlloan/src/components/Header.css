@@ -1,4 +1,4 @@
-/* Links */
+
 a {
   text-decoration: none;
   color: var(--link-color, #e5e5e5);
@@ -9,7 +9,7 @@ a:hover {
   color: var(--link-hover, #9ca3af);
 }
 
-/* Header */
+
 .header {
   display: flex;
   align-items: center;
@@ -17,7 +17,7 @@ a:hover {
   background-color: #1e1e1e;
 }
 
-/* Botão do menu */
+
 .menu-btn {
   background: none;
   border: none;
@@ -26,14 +26,14 @@ a:hover {
   cursor: pointer;
 }
 
-/* Logo */
+
 .logoemp {
   margin-left: 20px;
   font-size: 24px;
   font-weight: bold;
 }
 
-/* User info */
+
 .user-info {
   position: relative;
   display: flex;
@@ -42,7 +42,6 @@ a:hover {
   margin-left: auto;
 }
 
-/* Nome do usuário */
 .user-name {
   font-weight: bold;
   cursor: pointer;
@@ -53,7 +52,7 @@ a:hover {
   color: var(--link-hover, #9ca3af);
 }
 
-/* Avatar do usuário */
+
 .user-avatar {
   width: 30px;
   height: 30px;
@@ -61,7 +60,7 @@ a:hover {
   cursor: pointer;
 }
 
-/* Dropdown do menu de usuário */
+
 .dropdown {
   position: absolute;
   top: 120%;
@@ -76,7 +75,7 @@ a:hover {
   flex-direction: column;
 }
 
-/* Botão do dropdown */
+
 .dropdown button {
   background: none;
   border: none;

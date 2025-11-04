@@ -16,16 +16,16 @@ function Sidebar({ isOpen }) {
           <div className="section">
             <strong>Relatórios</strong>
             <ul>
-              <li><Link to="/Relatorios/Diario">Diario</Link></li>
-              <li><Link to="/Relatorios/Mensal">Mensal</Link></li>
+              <li><Link to="/Relatorios/Diario">Ativos</Link></li>
+              <li><Link to="/Relatorios/Mensal">Inativos</Link></li>
             </ul>
           </div>
           <div className="section">
-            <strong>Cadastrar</strong>
+            <strong>Gerenciar</strong>
             <ul>
-              <li><Link to="/CadastroUser">Usuário</Link></li>
+              <li><Link to="/CadastroUser">Usuários</Link></li>
               <li><Link to="/CadastroEquip">Equipamentos</Link></li>
-              <li><Link to="/CadastroADM">Admins</Link></li>
+              <li><Link to="/CadastroADM">Operadores</Link></li>
             </ul>
           </div>
         </>
