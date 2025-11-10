@@ -50,6 +50,21 @@ h2 {
   align-items: center;
   gap: 10px; /* Adiciona um pequeno espaço entre as colunas */
 }
+.input-com-botao {
+
+  align-items: center;
+  gap: 10px;
+}
+
+.input-com-botao input {
+  margin-right: 10px;
+  flex: 1;
+}
+
+.input-com-botao .btn-relatorio {
+  white-space: nowrap;
+  height: 100%;
+}
 
 .tabela-header {
   background-color: #3f3939;

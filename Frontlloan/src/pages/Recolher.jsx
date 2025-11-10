@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
+import { BrowserMultiFormatReader } from '@zxing/browser'
 import Header from '../components/Header'
 import Sidebar from '../components/Sidebar'
-import './Emprestar.css' // reaproveita o mesmo estilo
+import './Emprestar.css'
 
 function Recolher() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [patrimonio, setPatrimonio] = useState('')
   const [equipamentos, setEquipamentos] = useState([])
   const [mensagem, setMensagem] = useState('')
+  const [scannerAtivo, setScannerAtivo] = useState(false)
+  const [videoRef, setVideoRef] = useState(null)
 
+  // 🔹 Carrega equipamentos do servidor
   useEffect(() => {
     async function fetchEquipamentos() {
       try {
@@ -26,11 +30,41 @@ function Recolher() {
 
   const equipamentosComEmprestimo = equipamentos.filter(e => !e.disponivel)
 
+  // 🔹 Controle do scanner de leitura (igual ao da tela Emprestar)
+  useEffect(() => {
+    let codeReader = null
+
+    if (scannerAtivo && videoRef) {
+      codeReader = new BrowserMultiFormatReader()
+      codeReader.decodeFromVideoDevice(null, videoRef, (result, err) => {
+        if (result) {
+          const codigo = result.getText()
+          console.log('Código lido:', codigo)
+          setPatrimonio(codigo)
+          setMensagem('Código detectado com sucesso!')
+          setScannerAtivo(false)
+        }
+      })
+    }
+
+    // Limpa o scanner ao desmontar
+    return () => {
+      if (codeReader) {
+        try {
+          codeReader.stopContinuousDecode()
+        } catch {
+          console.warn('Scanner já parado.')
+        }
+      }
+    }
+  }, [scannerAtivo, videoRef])
+
+  // 🔹 Envia devolução ao servidor
   async function handleRecolher(e) {
     e.preventDefault()
 
     if (!patrimonio) {
-      setMensagem('Digite o patrimônio do equipamento.')
+      setMensagem('Digite ou escaneie o patrimônio do equipamento.')
       return
     }
 
@@ -57,7 +91,7 @@ function Recolher() {
   }
 
   const equipamentosFiltrados = equipamentosComEmprestimo.filter(eq =>
-    eq.patrimonio.toLowerCase().includes(patrimonio.toLowerCase())
+    eq.patrimonio.toString().toLowerCase().includes(patrimonio.toLowerCase())
   )
 
   return (
@@ -71,10 +105,11 @@ function Recolher() {
               <h2>Registrar Devolução</h2>
 
               <form onSubmit={handleRecolher}>
+                {/* Campo do patrimônio */}
                 <label>Patrimônio do Equipamento:</label>
                 <input
                   type="text"
-                  placeholder="Digite o código do equipamento..."
+                  placeholder="Digite ou escaneie o código..."
                   value={patrimonio}
                   onChange={(e) => setPatrimonio(e.target.value)}
                   list="listaDevolucao"
@@ -87,6 +122,32 @@ function Recolher() {
                     </option>
                   ))}
                 </datalist>
+
+                {/* Botão de ativar câmera */}
+                <button
+                  type="button"
+                  className="btn-relatorio"
+                  onClick={() => setScannerAtivo(!scannerAtivo)}
+                  style={{ marginBottom: '10px' }}
+                >
+                  {scannerAtivo ? 'Fechar Câmera' : 'Ler Código do Equipamento'}
+                </button>
+
+                {/* Preview da câmera */}
+                {scannerAtivo && (
+                  <div style={{ marginBottom: '10px' }}>
+                    <video
+                      ref={setVideoRef}
+                      style={{
+                        width: '100%',
+                        maxWidth: 400,
+                        borderRadius: 10,
+                        border: '2px solid #444'
+                      }}
+                    />
+                    <p style={{ color: '#333' }}>Aponte o código do equipamento para a câmera...</p>
+                  </div>
+                )}
 
                 <button className="btn-relatorio" type="submit">
                   Devolver

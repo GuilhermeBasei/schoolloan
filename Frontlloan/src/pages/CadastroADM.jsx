@@ -14,7 +14,7 @@ function CadastroADM() {
   const [editando, setEditando] = useState(null);
   const [filtro, setFiltro] = useState('');
 
-  // 🔹 Carrega administradores
+  
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
@@ -25,7 +25,7 @@ function CadastroADM() {
         const data = await response.json();
         setAdmins(data);
       } catch (error) {
-        console.error('Erro ao carregar administradores:', error);
+        console.error('Erro ao carregar operadores:', error);
       }
     };
     fetchAdmins();
@@ -57,7 +57,7 @@ function CadastroADM() {
       });
 
       if (response.ok) {
-        setMensagem(editando ? 'Administrador atualizado com sucesso!' : 'Administrador cadastrado com sucesso!');
+        setMensagem(editando ? 'Operador atualizado com sucesso!' : 'Operador cadastrado com sucesso!');
         setNome('');
         setSenha('');
         setConfirmarSenha('');
@@ -70,7 +70,7 @@ function CadastroADM() {
         setAdmins(data);
       } else {
         const data = await response.json();
-        setMensagem(data.error || 'Erro ao salvar administrador.');
+        setMensagem(data.error || 'Erro ao salvar operador.');
       }
     } catch (error) {
       console.error(error);
@@ -88,7 +88,7 @@ function CadastroADM() {
 
   // 🔹 Excluir admin
   const handleDelete = async (id) => {
-    if (!window.confirm('Tem certeza que deseja excluir este administrador?')) return;
+    if (!window.confirm('Tem certeza que deseja excluir este operador?')) return;
 
     try {
       const token = localStorage.getItem('token');
@@ -101,7 +101,7 @@ function CadastroADM() {
         setAdmins(admins.filter(a => a.id !== id));
       }
     } catch (error) {
-      console.error('Erro ao excluir administrador:', error);
+      console.error('Erro ao excluir operador:', error);
     }
   };
 
@@ -119,7 +119,7 @@ function CadastroADM() {
           <div className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
             <div className="login-box">
               <img src={logo} alt="Logo SchoolLoan" className="logo" />
-              <h2>Gerenciar Administradores</h2>
+              <h2>Gerenciar Operadores</h2>
 
               <form onSubmit={handleSubmit}>
                 <label>Usuário:</label>
@@ -216,7 +216,7 @@ function CadastroADM() {
                 </div>
               ))}
 
-              {adminsFiltrados.length === 0 && <p>Nenhum administrador encontrado.</p>}
+              {adminsFiltrados.length === 0 && <p>Nenhum operador encontrado.</p>}
             </div>
           </div>
         </div>
