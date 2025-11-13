@@ -21,15 +21,13 @@ router.get('/', async (req, res) => {
 
 // Criar usuário
 router.post('/', async (req, res) => {
-  const { nome, codigo } = req.body
+  const { nome, codigo, email } = req.body; 
   try {
     const existente = await prisma.usuario.findUnique({ where: { codigo } })
-    if (existente) {
-      return res.status(400).json({ error: 'Código já cadastrado.' })
-    }
+    if (existente) return res.status(400).json({ error: 'Código já cadastrado.' })
 
     const user = await prisma.usuario.create({
-      data: { nome, codigo }
+      data: { nome, codigo, email }
     })
     res.status(201).json(user)
   } catch (error) {
@@ -40,11 +38,11 @@ router.post('/', async (req, res) => {
 // Atualizar usuário
 router.put('/:id', async (req, res) => {
   const { id } = req.params
-  const { nome, codigo } = req.body
+  const { nome, codigo, email } = req.body 
   try {
     const user = await prisma.usuario.update({
       where: { id: Number(id) },
-      data: { nome, codigo }
+      data: { nome, codigo, email }
     })
     res.json(user)
   } catch (error) {

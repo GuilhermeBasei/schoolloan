@@ -45,7 +45,7 @@ h2 {
 .tabela-header, .tabela-linha {
   display: grid;
   /* Usuário | Patrimônio | Descrição | Data Empréstimo */
-  grid-template-columns: 150px 120px 1fr 160px; /* Exemplo de 4 colunas */
+  grid-template-columns: 150px 1fr 1fr 1fr 160px; /* Exemplo de 4 colunas */
   padding: 10px;
   align-items: center;
   gap: 10px; /* Adiciona um pequeno espaço entre as colunas */

@@ -46,11 +46,12 @@ function RelatorioMensal() {
                                     <span>Usuário</span>
                                     <span>Patrimônio</span>
                                     <span>Descrição</span>
+                                    <span>Sala Utilização</span>
                                     <span>Data Devolução</span>
                                 </div>
 
 
-                                                              
+
 
                                 {emprestimos.length > 0 ? (
                                     emprestimos.map((emp) => (
@@ -58,6 +59,7 @@ function RelatorioMensal() {
                                             <span>{emp.usuario?.nome}</span>
                                             <span>{emp.equipamento?.patrimonio}</span>
                                             <span>{emp.equipamento?.descricao}</span>
+                                            <span>{emp.salaUtilizacao}</span>
                                             <span> {new Date(emp.dataDevolucao).toLocaleString('pt-BR', {
                                                 dateStyle: 'short',
                                                 timeStyle: 'short',

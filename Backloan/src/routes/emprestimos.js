@@ -21,43 +21,38 @@ router.get('/', async (req, res) => {
 
 // Criar empréstimo
 router.post('/', async (req, res) => {
-  const { usuarioId, equipamentoId } = req.body;
+  const { usuarioId, equipamentoId, salaUtilizacao } = req.body 
 
   try {
-    // Verifica se o equipamento existe
-    const equipamento = await prisma.equipamento.findUnique({
-      where: { id: Number(equipamentoId) },
-    });
+    const equipamento = await prisma.equipamento.findUnique({ where: { id: Number(equipamentoId) } })
+    if (!equipamento) return res.status(404).json({ error: 'Equipamento não encontrado.' })
 
-    if (!equipamento) {
-      return res.status(404).json({ error: 'Equipamento não encontrado.' });
-    }
+    if (!equipamento.disponivel)
+      return res.status(400).json({ error: 'Este equipamento já está emprestado.' })
 
-    // Verifica se o equipamento está disponível
-    if (!equipamento.disponivel) {
-      return res.status(400).json({ error: 'Este equipamento já está emprestado.' });
-    }
-
-    // Verifica se o usuário já tem uma devolução pendente
-   /* const usuario = await prisma.usuario.findUnique({
-      where: { id: Number(usuarioId) },
-    });
-
-    if (!usuario) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
-    }
-
-    if (usuario.devolucaoPendente) {
-      return res.status(400).json({ error: 'Usuário já possui um empréstimo pendente.' });
-    }*/
-
-    // Cria o empréstimo
     const emprestimo = await prisma.emprestimo.create({
       data: {
         usuarioId: Number(usuarioId),
         equipamentoId: Number(equipamentoId),
+        salaUtilizacao
       },
-    });
+    })
+
+    // Verifica se o usuário já tem uma devolução pendente
+    /* const usuario = await prisma.usuario.findUnique({
+       where: { id: Number(usuarioId) },
+     });
+ 
+     if (!usuario) {
+       return res.status(404).json({ error: 'Usuário não encontrado.' });
+     }
+ 
+     if (usuario.devolucaoPendente) {
+       return res.status(400).json({ error: 'Usuário já possui um empréstimo pendente.' });
+     }*/
+
+    // Cria o empréstimo
+
 
     // Atualiza equipamento e usuário
     await prisma.equipamento.update({
@@ -78,7 +73,7 @@ router.post('/', async (req, res) => {
 });
 
 
-  // Devolver por patrimônio do equipamento
+// Devolver por patrimônio do equipamento
 router.patch('/devolver', async (req, res) => {
   const { patrimonio } = req.body;
 
@@ -142,7 +137,7 @@ router.get('/relatorio/diario', async (req, res) => {
         equipamento: { select: { patrimonio: true, descricao: true } },
       },
       orderBy: { dataEmprestimo: 'desc' },
-    });
+    })
 
     // Formata data + hora no formato brasileiro
     const formatado = emprestimosAtivos.map(e => ({

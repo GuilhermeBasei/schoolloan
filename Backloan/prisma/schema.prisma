@@ -11,6 +11,7 @@ model Usuario {
   id                 Int       @id @default(autoincrement())
   nome               String
   codigo             String    @unique
+  email              String?  
   dataUltimoEmprestimo DateTime?
   devolucaoPendente  Boolean   @default(false)
   emprestimos        Emprestimo[]
@@ -39,9 +40,10 @@ model Operador {
 }
 
 model Emprestimo {
-  id            Int       @id @default(autoincrement())
-  usuarioId     Int
-  equipamentoId Int
+  id             Int       @id @default(autoincrement())
+  usuarioId      Int
+  equipamentoId  Int
+  salaUtilizacao String 
   ativo         Boolean   @default(true)
   dataEmprestimo DateTime @default(now())
   dataDevolucao DateTime?

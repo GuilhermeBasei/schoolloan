@@ -1,11 +1,12 @@
 {
   "name": "schoolloan",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Sistema SchoolLoan - Frontend (Vite) + Backend (Express)",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"npm run dev --prefix backloan\" \"npm run dev --prefix frontlloan\""
+    "install-all": "npm install --prefix Backloan && npm install --prefix Frontlloan",
+    "dev": "concurrently \"npm run dev --prefix Backloan\" \"npm run dev --prefix Frontlloan\"",
+    "start": "npm run dev"
   },
   "repository": {
     "type": "git",

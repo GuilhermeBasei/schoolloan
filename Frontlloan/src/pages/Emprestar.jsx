@@ -13,6 +13,7 @@ function Emprestar() {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState(null)
   const [equipamentoSelecionado, setEquipamentoSelecionado] = useState(null)
   const [mensagem, setMensagem] = useState('')
+  const [sala, setSala] = useState('')
 
   // Controle dos scanners
   const [scannerUsuarioAtivo, setScannerUsuarioAtivo] = useState(false)
@@ -82,7 +83,6 @@ function Emprestar() {
           const codigo = result.getText()
           console.log('Equipamento lido:', codigo)
           setEquipamentoCodigo(codigo)
-
           const equipamento = equipamentos.find(eq => eq.patrimonio.toLowerCase() === codigo.toLowerCase())
           setEquipamentoSelecionado(equipamento || null)
           setScannerEquipamentoAtivo(false)
@@ -121,7 +121,7 @@ function Emprestar() {
       setMensagem('Informe códigos válidos para usuário e equipamento.')
       return
     }
-
+console.log('Sala digitada:', sala)
     try {
       const res = await fetch('http://localhost:3000/emprestimos', {
         method: 'POST',
@@ -131,7 +131,8 @@ function Emprestar() {
         },
         body: JSON.stringify({
           usuarioId: usuarioSelecionado.id,
-          equipamentoId: equipamentoSelecionado.id
+          equipamentoId: equipamentoSelecionado.id,
+          salaUtilizacao: sala
         })
       })
 
@@ -142,6 +143,7 @@ function Emprestar() {
         setMensagem('✅ Empréstimo realizado com sucesso!')
         setUsuarioCodigo('')
         setEquipamentoCodigo('')
+        setSala('')
         setUsuarioSelecionado(null)
         setEquipamentoSelecionado(null)
       }
@@ -169,7 +171,15 @@ function Emprestar() {
               <h2>Realizar Empréstimo</h2>
 
               <form onSubmit={handleEmprestar}>
+                <label>Sala de Utilização:</label>
+                <input
+                  type="text"
+                  value={sala}
+                  onChange={(e) => setSala(e.target.value)}
+                  placeholder="Digite a sala de utilização"
+                />
                 {/* Campo do usuário (professor) */}
+
                 <label>Código do Professor:</label>
                 <input
                   type="text"
@@ -178,6 +188,7 @@ function Emprestar() {
                   placeholder="Digite ou escaneie o crachá..."
                   list="listaUsuarios"
                   autoComplete="off"
+
                 />
                 <datalist id="listaUsuarios">
                   {usuariosFiltrados.map(u => (
@@ -186,7 +197,6 @@ function Emprestar() {
                     </option>
                   ))}
                 </datalist>
-
                 {/* Botão para ler o crachá */}
                 <button
                   type="button"
@@ -199,6 +209,7 @@ function Emprestar() {
                 >
                   {scannerUsuarioAtivo ? 'Fechar Câmera do Crachá' : 'Ler Crachá do Professor'}
                 </button>
+
 
                 {/* Preview da câmera do crachá */}
                 {scannerUsuarioAtivo && (

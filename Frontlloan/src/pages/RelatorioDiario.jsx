@@ -46,6 +46,7 @@ function RelatorioDiario() {
                                     <span>Usuário</span>
                                     <span>Patrimônio</span>
                                     <span>Descrição</span>
+                                    <span>Sala de Utilização</span>
                                     <span>Data Empréstimo</span>
                                 </div>
 
@@ -55,6 +56,7 @@ function RelatorioDiario() {
                                             <span>{emp.usuario?.nome}</span>
                                             <span>{emp.equipamento?.patrimonio}</span>
                                             <span>{emp.equipamento?.descricao}</span>
+                                            <span>{emp.salaUtilizacao}</span>
                                             <span> {new Date(emp.dataEmprestimo).toLocaleString('pt-BR', {
                                                 dateStyle: 'short',
                                                 timeStyle: 'short',

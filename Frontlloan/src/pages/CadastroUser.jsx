@@ -11,7 +11,8 @@ function CadastroUser() {
   const [mensagem, setMensagem] = useState('');
   const [usuarios, setUsuarios] = useState([]);
   const [busca, setBusca] = useState('');
-  const [editandoId, setEditandoId] = useState(null); // 👈 controla se está editando
+  const [editandoId, setEditandoId] = useState(null);
+  const [email, setEmail] = useState('')
 
   // 🔹 Buscar lista de usuários
   const carregarUsuarios = async () => {
@@ -48,7 +49,7 @@ function CadastroUser() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ nome, codigo }),
+          body: JSON.stringify({ nome, codigo, email }),
         });
       } else {
         // 🔸 Modo CADASTRO
@@ -58,7 +59,7 @@ function CadastroUser() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ nome, codigo }),
+          body: JSON.stringify({ nome, codigo, email }),
         });
       }
 
@@ -66,6 +67,7 @@ function CadastroUser() {
         setMensagem(editandoId ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!');
         setNome('');
         setCodigo('');
+        setEmail('')
         setEditandoId(null);
         carregarUsuarios();
       } else {
@@ -104,6 +106,7 @@ function CadastroUser() {
   const editarUsuario = (u) => {
     setNome(u.nome);
     setCodigo(u.codigo);
+    setEmail(u.email);
     setEditandoId(u.id);
     setMensagem('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -114,8 +117,8 @@ function CadastroUser() {
     busca.trim() === ''
       ? []
       : usuarios.filter((u) =>
-          u.nome.toLowerCase().includes(busca.toLowerCase())
-        );
+        u.nome.toLowerCase().includes(busca.toLowerCase())
+      );
 
   return (
     <div className="container">
@@ -144,6 +147,12 @@ function CadastroUser() {
                   onChange={(e) => setCodigo(e.target.value)}
                   required
                 />
+                <label>Email:</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
 
                 <button type="submit">
                   {editandoId ? 'Salvar Alterações' : 'Cadastrar'}
@@ -155,11 +164,12 @@ function CadastroUser() {
                     onClick={() => {
                       setEditandoId(null);
                       setNome('');
+                      setEmail('');
                       setCodigo('');
                       setMensagem('');
                     }}
                     style={{
-                  
+
                       backgroundColor: '#777',
                       color: '#000000ff',
                       border: 'none',
@@ -208,7 +218,7 @@ function CadastroUser() {
                     className="tabela-header"
                     style={{
                       display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 200px',
+                      gridTemplateColumns: '1fr 1fr 1fr 200px',
                       backgroundColor: '#3f3939',
                       color: '#fff',
                       fontWeight: 'bold',
@@ -217,6 +227,7 @@ function CadastroUser() {
                   >
                     <span>Nome</span>
                     <span>Código</span>
+                    <span>Email</span>
                     <span>Ações</span>
                   </div>
 
@@ -226,7 +237,7 @@ function CadastroUser() {
                       className="tabela-linha"
                       style={{
                         display: 'grid',
-                        gridTemplateColumns: '1fr 1fr 200px',
+                        gridTemplateColumns: '1fr 1fr 1fr 200px',
                         alignItems: 'center',
                         padding: '10px',
                         backgroundColor: '#f5f5f5',
@@ -235,7 +246,9 @@ function CadastroUser() {
                     >
                       <span>{u.nome}</span>
                       <span>{u.codigo}</span>
+                      <span>{u.email}</span>
                       <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+
                         <button
                           onClick={() => editarUsuario(u)}
                           style={{
@@ -249,7 +262,6 @@ function CadastroUser() {
                         >
                           Editar
                         </button>
-
                         <button
                           style={{
                             backgroundColor: '#ff4d4d',
