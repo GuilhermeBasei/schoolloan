@@ -8,7 +8,7 @@
     "dev": "concurrently \"npm run dev --prefix Backloan\" \"npm run dev --prefix Frontlloan\"",
     "start": "npm run dev"
   },
-  "repository": {
+  "repository": { 
     "type": "git",
     "url": "git+https://github.com/GuilhermeBasei/schoolloan.git"
   },

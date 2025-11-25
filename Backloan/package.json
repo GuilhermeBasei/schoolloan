@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup-db": "npx prisma migrate deploy",
     "start": "node server.js",
-    "postinstall": "prisma generate",
-    "dev": "nodemon server.js"
+    "prisma:generate": "prisma generate",
+    "dev": "nodemon server.js",
+    "seed": "prisma db seed"
   },
   "keywords": [],
   "author": "",
