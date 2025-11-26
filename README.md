@@ -1,41 +1,58 @@
-# 🎓 SchoolLoan
+🎓 SchoolLoan
 
-**SchoolLoan** é um sistema web desenvolvido para gerenciar o empréstimo de equipamentos em ambientes escolares. O objetivo do sistema é facilitar o controle de saídas e devoluções de itens como notebooks, projetores, tablets, entre outros, garantindo rastreabilidade, organização e segurança.
+SchoolLoan é um sistema web desenvolvido para gerenciar o empréstimo de equipamentos em ambientes escolares. O objetivo é facilitar o controle de retirada e devolução de itens como notebooks, tablets, projetores e outros dispositivos, garantindo organização e rastreabilidade.
 
-## 🚀 Tecnologias Utilizadas
+🚀 Tecnologias Utilizadas
+Camada	Tecnologias
+Frontend	React + Vite
+Backend	Node.js + Express + Prisma ORM
+Banco	PostgreSQL
+Deploy Local	Docker + Docker Compose
+🛠️ Funcionalidades
 
-### Frontend
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
+Cadastro e autenticação de operadores
 
-### Backend
-- [Node.js](https://nodejs.org/)
-- [Express](https://expressjs.com/)
+Registro de itens emprestados e devolvidos
 
-### Banco de Dados
-- PostgreSQL
+Controle de status e prazos
 
----
+Relatórios de utilização
 
-## 🛠️ Funcionalidades
+Controle administrativo
 
-- Registro de usuários e responsáveis pelos empréstimos
-- Empréstimo e devolução com controle de data/hora
-- Geração de relatórios de uso
-- Notificações de atraso
+🐳 Rodando com Docker (RECOMENDADO)
+📌 Pré-requisitos
 
----
+Docker Desktop instalado (Windows/Mac/Linux)
 
-## 📦 Como rodar o projeto localmente
+▶️ Passo a passo
 
-### Pré-requisitos
+Clone o repositório:
 
-- Node.js instalado
-- PostgreSQL instalado e configurado
-- Git instalado
-
-### Clonando o repositório
-
-```bash
 git clone https://github.com/GuilhermeBasei/schoolloan.git
 cd schoolloan
+
+
+Inicie os serviços com Docker:
+
+docker compose up --build -d
+
+
+Aplique as migrations do banco:
+
+docker exec -it tcc-backend npx prisma migrate deploy
+
+
+(Opcional) Rodar seed para criar o primeiro usuário:
+
+docker exec -it tcc-backend npx prisma db seed
+
+
+Acesse o sistema no navegador:
+
+👉 http://localhost
+
+🔐 Usuário inicial (via seed)
+Campo	Valor
+Usuário	admin
+Senha	123 (ou conforme definido no arquivo seed.js)
