@@ -22,11 +22,11 @@ O objetivo é facilitar o controle de retirada e devolução de itens como noteb
 - Registro de itens emprestados e devolvidos
 - Controle de status e prazos
 - Relatórios de utilização
-- Área administrativa
+
 
 ---
 
-## 🐳 Rodando com Docker (RECOMENDADO)
+## 🐳 Rodando com Docker
 
 ### 📌 Pré-requisitos
 
@@ -43,11 +43,11 @@ docker compose up --build -d
 docker exec -it tcc-backend npx prisma migrate deploy
 docker exec -it tcc-backend npx prisma db seed
 ```
-2. Acesse em http://localhost
+2. **Acesse em http://localhost**
 
-🔐 Login padrão gerado pela seed
-Usuário	Senha
-admin	123
+🔐 Login padrão gerado pela seed 
+Usuário: Admin	
+Senha: 123
 
 
 ⚙️ Configuração .env
