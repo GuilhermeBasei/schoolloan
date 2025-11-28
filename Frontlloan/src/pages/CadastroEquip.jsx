@@ -1,19 +1,24 @@
 import { useState, useEffect } from 'react';
-import './Login.css';
 import logo from '../assets/logo.png';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 
 function CadastroEquip() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+ const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768)
+
+  const [mostrarLista, setMostrarLista] = useState(false);
+
+
   const [patrimonio, setPatrimonio] = useState('');
   const [descricao, setDescricao] = useState('');
   const [mensagem, setMensagem] = useState('');
+  
+
   const [equipamentos, setEquipamentos] = useState([]);
   const [busca, setBusca] = useState('');
   const [editandoId, setEditandoId] = useState(null);
 
-  // 🔹 Carregar equipamentos do backend
+
   const carregarEquipamentos = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -32,42 +37,37 @@ function CadastroEquip() {
     carregarEquipamentos();
   }, []);
 
-  // 🔹 Cadastrar ou editar equipamento
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
     try {
       let response;
+      const body = JSON.stringify({ patrimonio, descricao });
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      };
 
       if (editandoId) {
-        // Edição
         response = await fetch(`http://localhost:3000/equipamentos/${editandoId}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({ patrimonio, descricao }),
+          headers,
+          body,
         });
       } else {
-        // Novo cadastro
         response = await fetch('http://localhost:3000/equipamentos', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({ patrimonio, descricao }),
+          headers,
+          body,
         });
       }
 
       if (response.ok) {
-        setMensagem(editandoId ? 'Equipamento atualizado com sucesso!' : 'Equipamento cadastrado com sucesso!');
-        setPatrimonio('');
-        setDescricao('');
-        setEditandoId(null);
+        setMensagem(editandoId ? 'Equipamento atualizado!' : 'Equipamento cadastrado!');
+        limparFormulario();
         carregarEquipamentos();
+        setMostrarLista(true); 
       } else {
         const data = await response.json();
         setMensagem(data.error || 'Erro ao salvar equipamento.');
@@ -78,7 +78,14 @@ function CadastroEquip() {
     }
   };
 
-  // 🔹 Excluir equipamento
+  const limparFormulario = () => {
+    setPatrimonio('');
+    setDescricao('');
+    setEditandoId(null);
+    setMensagem('');
+  };
+
+
   const excluirEquipamento = async (id) => {
     if (!window.confirm('Tem certeza que deseja excluir este equipamento?')) return;
 
@@ -90,26 +97,25 @@ function CadastroEquip() {
       });
 
       if (response.ok) {
-        setMensagem('Equipamento excluído com sucesso!');
         carregarEquipamentos();
       } else {
         setMensagem('Erro ao excluir equipamento.');
       }
     } catch (error) {
-      console.error('Erro ao excluir equipamento:', error);
+      console.error('Erro ao excluir:', error);
     }
   };
 
-  // 🔹 Editar equipamento
+
   const editarEquipamento = (e) => {
     setPatrimonio(e.patrimonio);
     setDescricao(e.descricao);
     setEditandoId(e.id);
     setMensagem('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMostrarLista(false); 
+    document.querySelector('.content')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 🔹 Filtro — mostra apenas resultados da busca
   const equipamentosFiltrados =
     busca.trim() === ''
       ? []
@@ -120,18 +126,22 @@ function CadastroEquip() {
         );
 
   return (
-    <div className="container">
-      <div className="app">
-        <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        <div className="main">
-          <Sidebar isOpen={sidebarOpen} />
-          <div className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-            <div className="login-box">
-              <img src={logo} alt="Logo SchoolLoan" className="logo" />
-              <h2>Gerenciar Equipamentos</h2>
+    <div className="app-container" style={{ flexDirection: 'column', height: '100vh' }}>
+      <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+      
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        <Sidebar isOpen={sidebarOpen} />
+        
+        <main className="content" style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+          <div className="center-container" style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
+            
+            {}
+            <div className="glass-card">
+              <img src={logo} alt="Logo SchoolLoan" className="logo" style={{ width: '80px', marginBottom: '10px' }} />
+              <h2>{editandoId ? 'Editar Equipamento' : 'Cadastrar Equipamentos'}</h2>
 
               <form onSubmit={handleSubmit}>
-                <label>Patrimônio:</label>
+                <label style={{ textAlign: 'left', display: 'block' }}>Patrimônio:</label>
                 <input
                   type="number"
                   value={patrimonio}
@@ -139,7 +149,7 @@ function CadastroEquip() {
                   required
                 />
 
-                <label>Descrição:</label>
+                <label style={{ textAlign: 'left', display: 'block' }}>Descrição:</label>
                 <input
                   type="text"
                   value={descricao}
@@ -147,132 +157,115 @@ function CadastroEquip() {
                   required
                 />
 
-                <button type="submit">
-                  {editandoId ? 'Salvar Alterações' : 'Cadastrar'}
-                </button>
-
-                {editandoId && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditandoId(null);
-                      setPatrimonio('');
-                      setDescricao('');
-                      setMensagem('');
-                    }}
-                    style={{
-                      marginLeft: '10px',
-                      backgroundColor: '#777',
-                      color: '#fff',
-                      border: 'none',
-                      padding: '8px 12px',
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Cancelar
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '10px' }}>
+                  <button type="submit" className="btn-primary">
+                    {editandoId ? 'Salvar Alterações' : 'Cadastrar'}
                   </button>
-                )}
+
+                  {editandoId && (
+                    <button
+                      type="button"
+                      onClick={limparFormulario}
+                      style={{ background: '#666', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '12px', cursor: 'pointer' }}
+                    >
+                      Cancelar
+                    </button>
+                  )}
+                </div>
               </form>
 
               {mensagem && (
-                <p style={{ marginTop: '10px', color: 'black' }}>{mensagem}</p>
+                <p style={{ marginTop: '15px', color: mensagem.includes('Erro') ? 'var(--danger)' : 'var(--accent)' }}>
+                  {mensagem}
+                </p>
               )}
 
-              <div style={{ marginTop: '30px' }}>
-                <h3 style={{ color: 'black' }}>Buscar Equipamento</h3>
-                <input
-                  type="text"
-                  placeholder="Digite a descrição ou patrimônio..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  style={{
+              {}
+              <hr style={{ margin: '20px 0', border: '0', borderTop: '1px solid rgba(255,255,255,0.2)' }} />
+              
+              <button 
+                type="button" 
+                onClick={() => setMostrarLista(!mostrarLista)}
+                style={{ 
+                    background: 'transparent', 
+                    border: '1px solid var(--primary)', 
+                    color: 'var(--text-dark)',
+                    padding: '10px 20px',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
                     width: '100%',
-                    padding: '10px',
-                    borderRadius: '10px',
-                    border: '1px solid #ccc',
-                    marginTop: '10px',
-                  }}
-                />
-              </div>
+                    fontWeight: 'bold',
+                    transition: '0.3s'
+                }}
+                onMouseOver={(e) => {e.target.style.background = 'var(--primary)'; e.target.style.color = 'white'}}
+                onMouseOut={(e) => {e.target.style.background = 'transparent'; e.target.style.color = 'var(--text-dark)'}}
+              >
+                {mostrarLista ? 'Ocultar Lista' : '🔍 Ver Lista de Equipamentos'}
+              </button>
 
-              {equipamentosFiltrados.length > 0 && (
-                <div
-                  className="tabela"
-                  style={{
-                    marginTop: '20px',
-                    border: '1px solid #3f3939',
-                    borderRadius: '10px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    className="tabela-header"
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 200px',
-                      backgroundColor: '#3f3939',
-                      color: '#fff',
-                      fontWeight: 'bold',
-                      padding: '10px',
-                    }}
-                  >
-                    <span>Patrimônio</span>
-                    <span>Descrição</span>
-                    <span>Ações</span>
-                  </div>
-
-                  {equipamentosFiltrados.map((e) => (
-                    <div
-                      key={e.id}
-                      className="tabela-linha"
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr 200px',
-                        alignItems: 'center',
-                        padding: '10px',
-                        backgroundColor: '#f5f5f5',
-                        borderTop: '1px solid #ccc',
-                      }}
-                    >
-                      <span>{e.patrimonio}</span>
-                      <span>{e.descricao}</span>
-                      <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-                        <button
-                          onClick={() => editarEquipamento(e)}
-                          style={{
-                            backgroundColor: '#ffa500',
-                            border: 'none',
-                            padding: '5px 10px',
-                            color: '#fff',
-                            borderRadius: 10,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          Editar
-                        </button>
-
-                        <button
-                          style={{
-                            backgroundColor: '#ff4d4d',
-                            border: 'none',
-                            padding: '5px 10px',
-                            color: '#fff',
-                            borderRadius: '10px',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => excluirEquipamento(e.id)}
-                        >
-                          Excluir
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
+
+            {}
+            {mostrarLista && (
+                <div className="glass-card wide" style={{ marginTop: '20px', padding: '20px' }}>
+                <h3 style={{ color: 'var(--text-dark)', marginBottom: '10px' }}>Buscar Equipamento</h3>
+                <input
+                    type="text"
+                    placeholder="Digite a descrição ou patrimônio..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    style={{ marginBottom: '20px' }}
+                />
+
+                {equipamentosFiltrados.length > 0 ? (
+                    <div className="tabela-container">
+                    {}
+                    <div className="tabela-header" style={{ gridTemplateColumns: '1fr 2fr 150px' }}>
+                        <span>Patrimônio</span>
+                        <span>Descrição</span>
+                        <span>Ações</span>
+                    </div>
+
+                    {}
+                    {equipamentosFiltrados.map((e) => (
+                        <div 
+                            key={e.id} 
+                            className="tabela-linha" 
+                            style={{ gridTemplateColumns: '1fr 2fr 150px' }}
+                        >
+                        <span style={{ fontWeight: 'bold' }}>{e.patrimonio}</span>
+                        <span>{e.descricao}</span>
+                        
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                            <button
+                            className="btn-primary"
+                            onClick={() => editarEquipamento(e)}
+                            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+                            >
+                            Editar
+                            </button>
+
+                            <button
+                            className="btn-danger"
+                            onClick={() => excluirEquipamento(e.id)}
+                            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+                            >
+                            Excluir
+                            </button>
+                        </div>
+                        </div>
+                    ))}
+                    </div>
+                ) : (
+                    <div style={{ padding: '20px', color: '#666' }}>
+                        {busca ? 'Nenhum equipamento encontrado.' : 'Digite algo para buscar.'}
+                    </div>
+                )}
+                </div>
+            )}
+
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

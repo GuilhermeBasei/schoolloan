@@ -5,7 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 export default function ProtectedRoute({ children }) {
   const { token } = useContext(AuthContext);
 
-  // se não houver token após o carregamento, redireciona
+
   if (!token) {
     return <Navigate to="/login" replace />;
   }

@@ -1,15 +1,14 @@
 import { useState, useContext } from 'react';
-import './Login.css';
 import logo from '../assets/logo.png';
-import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext'; // ✅ Importa o contexto
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 function Login() {
   const [nome, setNome] = useState('');
   const [senha, setSenha] = useState('');
   const [mensagem, setMensagem] = useState('');
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // ✅ Função de login do contexto
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,11 +23,10 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // ✅ Salva o token e o usuário no contexto e localStorage
         login(data.token, data.operador);
-
         setMensagem('Login realizado com sucesso!');
-        navigate('/'); // ✅ Redireciona para a home protegida
+
+        setTimeout(() => navigate('/'), 500); 
       } else {
         setMensagem(data.error || 'Usuário ou senha incorretos.');
       }
@@ -39,34 +37,60 @@ function Login() {
   };
 
   return (
-    <div className="container">
-      <div className="login-box">
-        <img src={logo} alt="Logo SchoolLoan" className="logo" />
-        <h2>Bem-vindo(a)</h2>
+    <div className="center-container">
+      <div className="glass-card" style={{ maxWidth: '400px', padding: '50px 40px' }}>
+        
+        <img 
+            src={logo} 
+            alt="Logo SchoolLoan" 
+            className="logo" 
+            style={{ width: '100px', marginBottom: '20px' }} 
+        />
+        
+        <h2 style={{ marginBottom: '30px' }}>Bem-vindo(a)</h2>
+        
         <form onSubmit={handleSubmit}>
-          <label>Usuário:</label>
-          <input
-            type="text"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-          <label>Senha:</label>
-          <input
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
-          <div>
-            <Link to="/" className="forgot">Esqueceu sua senha?</Link>
+          <div style={{ textAlign: 'left' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Usuário</label>
+            <input
+                type="text"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                required
+                placeholder="Seu nome de usuário"
+            />
           </div>
-          <button type="submit">Logar</button>
+
+          <div style={{ textAlign: 'left' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Senha</label>
+            <input
+                type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                required
+                placeholder="Sua senha"
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="btn-primary" 
+            style={{ width: '100%', marginTop: '10px', padding: '12px' }}
+          >
+            Entrar
+          </button>
         </form>
-        {mensagem && <p style={{ marginTop: '10px', color: 'white' }}>{mensagem}</p>}
-        <div>
-          <Link to="/" className="createAccount">Criar conta</Link>
-        </div>
+
+        {mensagem && (
+          <p style={{ 
+            marginTop: '20px', 
+            fontWeight: '600',
+            color: mensagem.includes('sucesso') ? 'var(--accent)' : 'var(--danger)' 
+          }}>
+            {mensagem}
+          </p>
+        )}
+        
       </div>
     </div>
   );

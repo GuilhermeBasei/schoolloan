@@ -1,37 +1,55 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Header.css';
-import { AuthContext } from '../context/AuthContext'; // ✅ Importa contexto
+import { AuthContext } from '../context/AuthContext';
 
 function Header({ toggleSidebar }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout } = useContext(AuthContext); // ✅ pega usuário do contexto
+  const { user, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    logout(); // ✅ limpa token e usuário do contexto e localStorage
+    logout();
     navigate('/login', { replace: true });
   };
 
   return (
     <header className="header">
-      <button className="menu-btn" onClick={toggleSidebar}>☰</button>
-      <h1 className="logoemp"><Link to="/">SchoolLoan</Link></h1>
+      {}
+      <button 
+        className="menu-btn" 
+        onClick={toggleSidebar}
+        style={{ background: 'transparent', padding: '0 8px', fontSize: '1.5rem', boxShadow: 'none' }}
+      >
+        ☰
+      </button>
+
+      {}
+      <div className="logo">
+        <Link to="/" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+            SchoolLoan
+        </Link>
+      </div>
 
       {user && (
         <div className="user-info">
+          {}
           <span
             className="user-name"
             onClick={() => setMenuOpen(!menuOpen)}
-            style={{ cursor: 'pointer' }}
           >
-            {user.nome} {/* ✅ mostra o nome do usuário do contexto */}
+            {user.nome}
           </span>
-          <img src="https://i.pravatar.cc/30" alt="user" className="user-avatar" />
+          
+          <img 
+            src="https://i.pravatar.cc/30" 
+            alt="user" 
+            className="user-avatar" 
+            onClick={() => setMenuOpen(!menuOpen)}
+          />
 
           {menuOpen && (
             <div className="dropdown">
-              <button onClick={handleLogout}>Deslogar</button>
+              <button onClick={handleLogout}>Sair</button>
             </div>
           )}
         </div>

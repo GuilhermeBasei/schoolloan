@@ -1,20 +1,26 @@
 import { useState, useEffect } from 'react';
-import './Login.css';
+
 import logo from '../assets/logo.png';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 
 function CadastroUser() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+ const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768)
+  
+  const [mostrarLista, setMostrarLista] = useState(false);
+
+ 
   const [nome, setNome] = useState('');
   const [codigo, setCodigo] = useState('');
+  const [email, setEmail] = useState('');
   const [mensagem, setMensagem] = useState('');
+  
+ 
   const [usuarios, setUsuarios] = useState([]);
   const [busca, setBusca] = useState('');
   const [editandoId, setEditandoId] = useState(null);
-  const [email, setEmail] = useState('')
 
-  // 🔹 Buscar lista de usuários
+
   const carregarUsuarios = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -33,43 +39,40 @@ function CadastroUser() {
     carregarUsuarios();
   }, []);
 
-  // 🔹 Função para cadastrar ou editar
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
     try {
       let response;
+      const body = JSON.stringify({ nome, codigo, email });
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      };
 
       if (editandoId) {
-        // 🔸 Modo EDIÇÃO
+      
         response = await fetch(`http://localhost:3000/usuarios/${editandoId}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({ nome, codigo, email }),
+          headers,
+          body,
         });
       } else {
-        // 🔸 Modo CADASTRO
+       
         response = await fetch('http://localhost:3000/usuarios', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({ nome, codigo, email }),
+          headers,
+          body,
         });
       }
 
       if (response.ok) {
-        setMensagem(editandoId ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!');
-        setNome('');
-        setCodigo('');
-        setEmail('')
-        setEditandoId(null);
+        setMensagem(editandoId ? 'Usuário atualizado!' : 'Usuário cadastrado!');
+        limparFormulario();
         carregarUsuarios();
+        setMostrarLista(true); 
       } else {
         const data = await response.json();
         setMensagem(data.error || 'Erro ao salvar usuário.');
@@ -80,7 +83,15 @@ function CadastroUser() {
     }
   };
 
-  // 🔹 Função para excluir
+  const limparFormulario = () => {
+    setNome('');
+    setCodigo('');
+    setEmail('');
+    setEditandoId(null);
+    setMensagem('');
+  };
+
+
   const excluirUsuario = async (id) => {
     if (!window.confirm('Tem certeza que deseja excluir este usuário?')) return;
 
@@ -92,7 +103,6 @@ function CadastroUser() {
       });
 
       if (response.ok) {
-        setMensagem('Usuário excluído com sucesso!');
         carregarUsuarios();
       } else {
         setMensagem('Erro ao excluir usuário.');
@@ -102,37 +112,44 @@ function CadastroUser() {
     }
   };
 
-  // 🔹 Função para editar
+
   const editarUsuario = (u) => {
     setNome(u.nome);
     setCodigo(u.codigo);
     setEmail(u.email);
     setEditandoId(u.id);
     setMensagem('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMostrarLista(false); 
+    document.querySelector('.content')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 🔹 Filtro: só mostra se houver busca
+
   const usuariosFiltrados =
     busca.trim() === ''
       ? []
       : usuarios.filter((u) =>
-        u.nome.toLowerCase().includes(busca.toLowerCase())
+        u.nome.toLowerCase().includes(busca.toLowerCase()) ||
+        (u.email && u.email.toLowerCase().includes(busca.toLowerCase())) ||
+        (u.codigo && u.codigo.includes(busca))
       );
 
   return (
-    <div className="container">
-      <div className="app">
-        <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        <div className="main">
-          <Sidebar isOpen={sidebarOpen} />
-          <div className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-            <div className="login-box">
-              <img src={logo} alt="Logo SchoolLoan" className="logo" />
-              <h2>Gerenciar Usuários</h2>
+    <div className="app-container" style={{ flexDirection: 'column', height: '100vh' }}>
+      <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+      
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        <Sidebar isOpen={sidebarOpen} />
+        
+        <main className="content" style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+          <div className="center-container" style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
+            
+            {}
+            <div className="glass-card">
+              <img src={logo} alt="Logo SchoolLoan" className="logo" style={{ width: '80px', marginBottom: '10px' }} />
+              <h2>{editandoId ? 'Editar Usuário' : 'Cadastrar Usuários'}</h2>
 
               <form onSubmit={handleSubmit}>
-                <label>Nome do Usuário:</label>
+                <label style={{ textAlign: 'left', display: 'block' }}>Nome do Usuário:</label>
                 <input
                   type="text"
                   value={nome}
@@ -140,149 +157,132 @@ function CadastroUser() {
                   required
                 />
 
-                <label>Código do Crachá:</label>
+                <label style={{ textAlign: 'left', display: 'block' }}>Código do Crachá:</label>
                 <input
                   type="text"
                   value={codigo}
                   onChange={(e) => setCodigo(e.target.value)}
                   required
                 />
-                <label>Email:</label>
+
+                <label style={{ textAlign: 'left', display: 'block' }}>Email:</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
 
-                <button type="submit">
-                  {editandoId ? 'Salvar Alterações' : 'Cadastrar'}
-                </button>
-
-                {editandoId && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditandoId(null);
-                      setNome('');
-                      setEmail('');
-                      setCodigo('');
-                      setMensagem('');
-                    }}
-                    style={{
-
-                      backgroundColor: '#777',
-                      color: '#000000ff',
-                      border: 'none',
-                      padding: '8px 12px',
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Cancelar
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '10px' }}>
+                  <button type="submit" className="btn-primary">
+                    {editandoId ? 'Salvar Alterações' : 'Cadastrar'}
                   </button>
-                )}
+
+                  {editandoId && (
+                    <button
+                      type="button"
+                      onClick={limparFormulario}
+                      style={{ background: '#666', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '12px', cursor: 'pointer' }}
+                    >
+                      Cancelar
+                    </button>
+                  )}
+                </div>
               </form>
 
               {mensagem && (
-                <p style={{ marginTop: '10px', color: 'black' }}>{mensagem}</p>
+                <p style={{ marginTop: '15px', color: mensagem.includes('Erro') ? 'var(--danger)' : 'red' }}>
+                  {mensagem}
+                </p>
               )}
 
-              <div style={{ marginTop: '30px' }}>
-                <h3 style={{ color: 'black' }}>Buscar Usuário</h3>
-                <input
-                  type="text"
-                  placeholder="Digite o nome..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  style={{
+              {}
+              <hr style={{ margin: '20px 0', border: '0', borderTop: '1px solid rgba(255,255,255,0.2)' }} />
+              
+              <button 
+                type="button" 
+                onClick={() => setMostrarLista(!mostrarLista)}
+                style={{ 
+                    background: 'transparent', 
+                    border: '1px solid var(--primary)', 
+                    color: 'var(--text-dark)',
+                    padding: '10px 20px',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
                     width: '100%',
-                    padding: '10px',
-                    borderRadius: '10px',
-                    border: '1px solid #ccc',
-                    marginTop: '10px',
-                  }}
-                />
-              </div>
+                    fontWeight: 'bold',
+                    transition: '0.3s'
+                }}
+                onMouseOver={(e) => {e.target.style.background = 'var(--primary)'; e.target.style.color = 'white'}}
+                onMouseOut={(e) => {e.target.style.background = 'transparent'; e.target.style.color = 'var(--text-dark)'}}
+              >
+                {mostrarLista ? 'Ocultar Lista' : '🔍 Ver Lista de Usuários'}
+              </button>
 
-              {usuariosFiltrados.length > 0 && (
-                <div
-                  className="tabela"
-                  style={{
-                    marginTop: '20px',
-                    border: '1px solid #3f3939',
-                    borderRadius: '10px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    className="tabela-header"
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr 200px',
-                      backgroundColor: '#3f3939',
-                      color: '#fff',
-                      fontWeight: 'bold',
-                      padding: '10px',
-                    }}
-                  >
-                    <span>Nome</span>
-                    <span>Código</span>
-                    <span>Email</span>
-                    <span>Ações</span>
-                  </div>
-
-                  {usuariosFiltrados.map((u) => (
-                    <div
-                      key={u.id}
-                      className="tabela-linha"
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr 1fr 200px',
-                        alignItems: 'center',
-                        padding: '10px',
-                        backgroundColor: '#f5f5f5',
-                        borderTop: '1px solid #ccc',
-                      }}
-                    >
-                      <span>{u.nome}</span>
-                      <span>{u.codigo}</span>
-                      <span>{u.email}</span>
-                      <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-
-                        <button
-                          onClick={() => editarUsuario(u)}
-                          style={{
-                            backgroundColor: '#ffa500',
-                            border: 'none',
-                            padding: '5px 10px',
-                            color: '#fff',
-                            borderRadius: 10,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          Editar
-                        </button>
-                        <button
-                          style={{
-                            backgroundColor: '#ff4d4d',
-                            border: 'none',
-                            padding: '5px 10px',
-                            color: '#fff',
-                            borderRadius: '10px',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => excluirUsuario(u.id)}
-                        >
-                          Excluir
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
+
+            {}
+            {mostrarLista && (
+                <div className="glass-card wide" style={{ marginTop: '20px', padding: '20px' }}>
+                <h3 style={{ color: 'var(--text-dark)', marginBottom: '10px' }}>Buscar Usuário</h3>
+                <input
+                    type="text"
+                    placeholder="Digite nome, código ou email..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    style={{ marginBottom: '20px' }}
+                />
+
+                {usuariosFiltrados.length > 0 ? (
+                    <div className="tabela-container">
+                    {}
+                    <div className="tabela-header" style={{ gridTemplateColumns: '1.5fr 1fr 1.5fr 150px' }}>
+                        <span>Nome</span>
+                        <span>Código</span>
+                        <span>Email</span>
+                        <span>Ações</span>
+                    </div>
+
+                    {}
+                    {usuariosFiltrados.map((u) => (
+                        <div 
+                            key={u.id} 
+                            className="tabela-linha" 
+                            style={{ gridTemplateColumns: '1.5fr 1fr 1.5fr 150px' }}
+                        >
+                        <span style={{ fontWeight: 'bold' }}>{u.nome}</span>
+                        <span>{u.codigo}</span>
+                        <span style={{ fontSize: '0.9rem', color: '#555', wordBreak: 'break-all' }}>{u.email}</span>
+                        
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                            <button
+                            className="btn-primary"
+                            onClick={() => editarUsuario(u)}
+                            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+                            >
+                            Editar
+                            </button>
+
+                            <button
+                            className="btn-danger"
+                            onClick={() => excluirUsuario(u.id)}
+                            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+                            >
+                            Excluir
+                            </button>
+                        </div>
+                        </div>
+                    ))}
+                    </div>
+                ) : (
+                    <div style={{ padding: '20px', color: '#666' }}>
+                        {busca ? 'Nenhum usuário encontrado.' : 'Digite algo para buscar.'}
+                    </div>
+                )}
+                </div>
+            )}
+
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

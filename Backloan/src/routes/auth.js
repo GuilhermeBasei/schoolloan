@@ -7,25 +7,24 @@ import dotenv from 'dotenv';
 dotenv.config();
 const router = express.Router();
 
-// Login de operador
 router.post('/login', async (req, res) => {
   const { nome, senha } = req.body;
 
   try {
-    // Verifica se o operador existe
+  
     const operador = await prisma.operador.findFirst({ where: { nome } });
 
     if (!operador) {
       return res.status(401).json({ error: 'Operador não encontrado' });
     }
 
-    // Verifica senha com bcrypt
+    
     const senhaCorreta = await bcrypt.compare(senha, operador.senha);
     if (!senhaCorreta) {
       return res.status(401).json({ error: 'Senha incorreta' });
     }
 
-    // Gera token JWT
+   
     const token = jwt.sign(
       {
         id: operador.id,
@@ -36,7 +35,7 @@ router.post('/login', async (req, res) => {
       { expiresIn: '8h' }
     );
 
-    // Retorna token e dados do operador
+  
     res.json({
       message: 'Login bem-sucedido',
       token,

@@ -4,10 +4,10 @@ import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// Todas as rotas abaixo exigem token válido
+
 router.use(authMiddleware);
 
-// Listar todos os empréstimos
+
 router.get('/', async (req, res) => {
   try {
     const emprestimos = await prisma.emprestimo.findMany({
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Criar empréstimo
+
 router.post('/', async (req, res) => {
   const { usuarioId, equipamentoId, salaUtilizacao } = req.body 
 
@@ -51,10 +51,9 @@ router.post('/', async (req, res) => {
        return res.status(400).json({ error: 'Usuário já possui um empréstimo pendente.' });
      }*/
 
-    // Cria o empréstimo
 
 
-    // Atualiza equipamento e usuário
+
     await prisma.equipamento.update({
       where: { id: Number(equipamentoId) },
       data: { disponivel: false, dataUltimoEmprestimo: new Date() },
@@ -73,7 +72,6 @@ router.post('/', async (req, res) => {
 });
 
 
-// Devolver por patrimônio do equipamento
 router.patch('/devolver', async (req, res) => {
   const { patrimonio } = req.body;
 
@@ -86,7 +84,6 @@ router.patch('/devolver', async (req, res) => {
       return res.status(404).json({ error: 'Equipamento não encontrado.' });
     }
 
-    // Busca o empréstimo ativo
     const emprestimoAtivo = await prisma.emprestimo.findFirst({
       where: {
         equipamentoId: equipamento.id,
@@ -98,7 +95,6 @@ router.patch('/devolver', async (req, res) => {
       return res.status(400).json({ error: 'Nenhum empréstimo ativo encontrado para este equipamento.' });
     }
 
-    // Atualiza o empréstimo
     const emprestimoAtualizado = await prisma.emprestimo.update({
       where: { id: emprestimoAtivo.id },
       data: {
@@ -108,7 +104,6 @@ router.patch('/devolver', async (req, res) => {
       include: { usuario: true, equipamento: true },
     });
 
-    // Atualiza o equipamento e o usuário
     await prisma.equipamento.update({
       where: { id: equipamento.id },
       data: { disponivel: true },
@@ -139,7 +134,7 @@ router.get('/relatorio/diario', async (req, res) => {
       orderBy: { dataEmprestimo: 'desc' },
     })
 
-    // Formata data + hora no formato brasileiro
+   
     const formatado = emprestimosAtivos.map(e => ({
       ...e,
       dataEmprestimoFormatada: new Date(e.dataEmprestimo).toLocaleString('pt-BR', {
@@ -157,7 +152,6 @@ router.get('/relatorio/diario', async (req, res) => {
 
 
 
-// Relatório mensal — empréstimos já devolvidos
 router.get('/relatorio/mensal', async (req, res) => {
   try {
     const emprestimosDevolvidos = await prisma.emprestimo.findMany({
@@ -169,7 +163,7 @@ router.get('/relatorio/mensal', async (req, res) => {
       orderBy: { dataDevolucao: 'desc' },
     });
 
-    // Formata data + hora no formato brasileiro
+
     const formatado = emprestimosDevolvidos.map(e => ({
       ...e,
       dataDevolucaoFormatada: new Date(e.dataDevolucao).toLocaleString('pt-BR', {

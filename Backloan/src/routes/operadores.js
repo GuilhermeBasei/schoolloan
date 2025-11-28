@@ -5,10 +5,8 @@ import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// Todas as rotas abaixo exigem token válido
 router.use(authMiddleware);
 
-// 🔹 Listar operadores
 router.get('/', async (req, res) => {
   try {
     const operadores = await prisma.operador.findMany();
@@ -18,7 +16,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// 🔹 Criar operador
+
 router.post('/', async (req, res) => {
   const { nome, senha, isAdmin } = req.body;
   if (!nome || !senha) {
@@ -35,7 +33,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// 🔹 Atualizar operador
+
 router.put('/:id', async (req, res) => {
   const { nome, senha, isAdmin } = req.body;
   const { id } = req.params;
@@ -54,7 +52,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// 🔹 Excluir operador
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {

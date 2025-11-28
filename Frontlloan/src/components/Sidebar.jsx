@@ -1,38 +1,57 @@
-import { Link } from 'react-router-dom'
-import './Sidebar.css'
+import { NavLink } from 'react-router-dom';
 
 function Sidebar({ isOpen }) {
   return (
-    <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
-      {isOpen && (
-        <>
-          <div className="section">
-            <strong>Empréstimos</strong>
-            <ul>
-              <li><Link to="/Emprestar">Emprestar</Link></li>
-              <li><Link to="/Recolher">Recolher</Link></li>
-            </ul>
-          </div>
-          <div className="section">
-            <strong>Relatórios</strong>
-            <ul>
-              <li><Link to="/Relatorios/Diario">Ativos</Link></li>
-              <li><Link to="/Relatorios/Mensal">Inativos</Link></li>
-            </ul>
-          </div>
-          <div className="section">
-            <strong>Gerenciar</strong>
-            <ul>
-              <li><Link to="/CadastroUser">Usuários</Link></li>
-              <li><Link to="/CadastroEquip">Equipamentos</Link></li>
-              <li><Link to="/CadastroADM">Operadores</Link></li>
-            </ul>
-          </div>
-        </>
-      )}
+
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      
+      <nav className="sidebar-nav">
+        
+        {}
+        <div className="sidebar-section">
+          <h3 className="section-title">Empréstimos</h3>
+          <ul>
+            <li>
+              <NavLink to="/Emprestar">Emprestar</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Recolher">Recolher</NavLink>
+            </li>
+          </ul>
+        </div>
+
+        {}
+        <div className="sidebar-section">
+          <h3 className="section-title">Relatórios</h3>
+          <ul>
+            <li>
+              <NavLink to="/Relatorios/Diario">Ativos</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Relatorios/Mensal">Inativos</NavLink>
+            </li>
+          </ul>
+        </div>
+
+        {}
+        <div className="sidebar-section">
+          <h3 className="section-title">Gerenciar</h3>
+          <ul>
+            <li>
+              <NavLink to="/CadastroUser">Usuários</NavLink>
+            </li>
+            <li>
+              <NavLink to="/CadastroEquip">Equipamentos</NavLink>
+            </li>
+            <li>
+              <NavLink to="/CadastroADM">Operadores</NavLink>
+            </li>
+          </ul>
+        </div>
+
+      </nav>
     </aside>
-  )
+  );
 }
 
-export default Sidebar
-
+export default Sidebar;

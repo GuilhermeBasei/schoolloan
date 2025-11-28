@@ -4,10 +4,8 @@ import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// Todas as rotas abaixo exigem token válido
 router.use(authMiddleware);
 
-// Listar equipamentos
 router.get('/', async (req, res) => {
   try {
     const equipamentos = await prisma.equipamento.findMany();
@@ -17,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Criar equipamento
+
 router.post('/', async (req, res) => {
   const { patrimonio, descricao } = req.body;
   try {
@@ -30,7 +28,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Atualizar disponibilidade
+
 router.patch('/:id/disponivel', async (req, res) => {
   const { id } = req.params;
   const { disponivel } = req.body;
@@ -47,7 +45,6 @@ router.patch('/:id/disponivel', async (req, res) => {
   
 });
 
-// Atualizar equipamento
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { patrimonio, descricao } = req.body;
@@ -62,7 +59,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Excluir equipamento
+
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {

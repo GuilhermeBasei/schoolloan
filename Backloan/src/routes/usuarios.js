@@ -4,10 +4,8 @@ import { authMiddleware } from '../middlewares/auth.js'
 
 const router = express.Router()
 
-// Todas as rotas abaixo exigem token válido
 router.use(authMiddleware)
 
-// Listar todos os usuários
 router.get('/', async (req, res) => {
   try {
     const usuarios = await prisma.usuario.findMany({
@@ -19,7 +17,6 @@ router.get('/', async (req, res) => {
   }
 })
 
-// Criar usuário
 router.post('/', async (req, res) => {
   const { nome, codigo, email } = req.body; 
   try {
@@ -35,7 +32,6 @@ router.post('/', async (req, res) => {
   }
 })
 
-// Atualizar usuário
 router.put('/:id', async (req, res) => {
   const { id } = req.params
   const { nome, codigo, email } = req.body 
@@ -50,7 +46,6 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-// Excluir usuário
 router.delete('/:id', async (req, res) => {
   const { id } = req.params
   try {

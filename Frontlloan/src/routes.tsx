@@ -17,10 +17,10 @@ function MainRoutes() {
   return (
     <AuthProvider>
       <Routes>
-        {/* rota pública */}
+        {}
         <Route path="/Login" element={<Login />} />
 
-        {/* rotas protegidas */}
+        {}
         <Route
           path="/"
           element={

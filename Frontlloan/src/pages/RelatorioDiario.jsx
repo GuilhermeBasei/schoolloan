@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Sidebar from '../components/Sidebar'
-import './Relatorios.css'
+
 
 function RelatorioDiario() {
-    const [sidebarOpen, setSidebarOpen] = useState(true)
+     const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768)
     const [emprestimos, setEmprestimos] = useState([])
     const [mensagem, setMensagem] = useState('')
+    const [filtro, setFiltro] = useState('')
 
     useEffect(() => {
         async function fetchRelatorio() {
@@ -29,49 +30,80 @@ function RelatorioDiario() {
         fetchRelatorio()
     }, [])
 
+    
+    const emprestimosFiltrados = emprestimos.filter(emp => {
+        const texto = filtro.toLowerCase()
+
+        return (
+            emp.usuario?.nome?.toLowerCase().includes(texto) ||
+            emp.equipamento?.patrimonio?.toLowerCase().includes(texto) ||
+            emp.equipamento?.descricao?.toLowerCase().includes(texto) ||
+            emp.salaUtilizacao?.toLowerCase().includes(texto) ||
+            emp.dataEmprestimoFormatada?.toLowerCase().includes(texto)
+        )
+    })
+
     return (
-        <div className="container">
-            <div className="app">
-                <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-                <div className="main">
-                    <Sidebar isOpen={sidebarOpen} />
-                    <div className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-                        <div className="login-boxfundo">
-                            <h2>Relatório Diário - Empréstimos Ativos</h2>
+        <div className="app-container" style={{ flexDirection: 'column', height: '100vh' }}>
+            <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+            
+            <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+                <Sidebar isOpen={sidebarOpen} />
+                
+                <main className="content" style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+                    <div className="center-container" style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
+                        
+                        <div className="glass-card wide" style={{ padding: '30px' }}>
+                            <h2 style={{ marginBottom: '20px' }}>Relatório Diário - Empréstimos Ativos</h2>
 
-                            {mensagem && <p className="mensagem">{mensagem}</p>}
+                            {mensagem && (
+                                <p style={{ color: 'var(--danger)', marginBottom: '15px' }}>{mensagem}</p>
+                            )}
 
-                            <div className="tabela">
-                                <div className="tabela-header">
+                            {}
+                            <input
+                                type="text"
+                                placeholder="Buscar por nome, patrimônio, descrição, sala ou data..."
+                                value={filtro}
+                                onChange={(e) => setFiltro(e.target.value)}
+                                style={{ marginBottom: '20px' }}
+                            />
+
+                            <div className="tabela-container">
+                                <div className="tabela-header" style={{ gridTemplateColumns: '1.5fr 1fr 2fr 1fr 1fr' }}>
                                     <span>Usuário</span>
                                     <span>Patrimônio</span>
                                     <span>Descrição</span>
-                                    <span>Sala de Utilização</span>
-                                    <span>Data Empréstimo</span>
+                                    <span>Sala</span>
+                                    <span>Data</span>
                                 </div>
 
-                                {emprestimos.length > 0 ? (
-                                    emprestimos.map((emp) => (
-                                        <div className="tabela-linha" key={emp.id}>
-                                            <span>{emp.usuario?.nome}</span>
+                                {emprestimosFiltrados.length > 0 ? (
+                                    emprestimosFiltrados.map((emp) => (
+                                        <div 
+                                            key={emp.id} 
+                                            className="tabela-linha" 
+                                            style={{ gridTemplateColumns: '1.5fr 1fr 2fr 1fr 1fr' }}
+                                        >
+                                            <span style={{ fontWeight: 'bold' }}>{emp.usuario?.nome}</span>
                                             <span>{emp.equipamento?.patrimonio}</span>
                                             <span>{emp.equipamento?.descricao}</span>
                                             <span>{emp.salaUtilizacao}</span>
-                                            <span> {new Date(emp.dataEmprestimo).toLocaleString('pt-BR', {
-                                                dateStyle: 'short',
-                                                timeStyle: 'short',
-                                            })}</span>
+                                            <span style={{ fontSize: '0.9rem', color: '#666' }}>
+                                                {emp.dataEmprestimoFormatada}
+                                            </span>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="tabela-linha">
-                                        <span colSpan="4">Nenhum empréstimo ativo encontrado.</span>
+                                    <div style={{ padding: '20px', color: '#666' }}>
+                                        Nenhum resultado encontrado.
                                     </div>
                                 )}
                             </div>
                         </div>
+
                     </div>
-                </div>
+                </main>
             </div>
         </div>
     )
